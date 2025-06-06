@@ -1,4 +1,4 @@
-# SmartCam Pro - Advanced Surveillance System 🌐
+# RPi SmartCam Pro - Advanced Surveillance System 🌐
 
 **Real-Time Video Streaming and Monitoring with Raspberry Pi**
 
