@@ -391,7 +391,7 @@ Follow PEP 8 and include documentation.
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file.
 
 ## Contact
-For support, open an issue at [https://github.com/your-username/SmartCamPro/issues](https://github.com/AbdulHasib-IRE/SmartCamPro/issues) or email [sm.abdulhasib.bd@gmail.com]. 
+For support, open an issue at [https://github.com/AbdulHasib-IRE/SmartCamPro/issues](https://github.com/AbdulHasib-IRE/SmartCamPro/issues) or email [sm.abdulhasib.bd@gmail.com]. 
 
 ## Acknowledgments
 - [Flask](https://flask.palletsprojects.com) for the web framework.
