@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+
+# Logs
+*.log
+/var/log/smartcampro.log
+smartcampro_backup.log
+
+# Captured images
+captured_image.jpg
+test.jpg
+
+# Virtual environment
+*.venv/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Other
+*.bak
+*.tmp
