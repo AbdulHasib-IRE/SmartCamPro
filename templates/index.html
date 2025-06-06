@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#26A69A">
+    <title>SmartCam Pro - Advanced Surveillance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for enhanced visuals */
+        .video-feed {
+            max-width: 100%;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+        .video-feed:hover {
+            transform: scale(1.02);
+        }
+        .status-card {
+            background: linear-gradient(135deg, #1F2A44 0%, #1A1F2B 100%);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        .setting-group {
+            @apply border-b border-gray-800 py-4;
+        }
+        .setting-group:last-child {
+            @apply border-b-0;
+        }
+        .loading-spinner {
+            border: 4px solid #4A5568;
+            border-top: 4px solid #26A69A;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @media (max-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            .video-feed {
+                max-height: 200px;
+            }
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 font-sans text-gray-200">
+    <div class="container mx-auto p-4 max-w-5xl">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-400">SmartCam Pro</h1>
+            <p class="text-lg text-gray-400 mt-2">Advanced Surveillance & Live Monitoring</p>
+        </header>
+
+        <!-- Main Grid Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Status Card -->
+            <div class="status-card">
+                <h2 class="text-xl font-semibold text-gray-100 mb-4">System Status</h2>
+                <div class="space-y-3">
+                    <p class="text-gray-300"><span class="font-medium">Status:</span> <span class="text-red-400 font-semibold">Disconnected (Offline)</span></p>
+                    <p class="text-gray-300"><span class="font-medium">Last Access:</span> <span class="text-teal-400">--</span></p>
+                    <p class="text-gray-300"><span class="font-medium">Transmitted Data:</span> <span class="text-purple-400">--</span></p>
+                    <p class="text-gray-300"><span class="font-medium">Temperature:</span> <span class="text-teal-400">--</span>°C</p>
+                    <p class="text-gray-300"><span class="font-medium">Ping:</span> <span class="text-purple-400">--</span> ms</p>
+                </div>
+            </div>
+
+            <!-- Settings Panel -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-semibold text-gray-100 mb-4">Camera Settings</h2>
+                <form id="settingsForm" method="POST" action="/set_settings" class="space-y-5">
+                    <div class="setting-group">
+                        <label for="monitor" class="block text-sm font-medium text-gray-300">Monitor</label>
+                        <select id="monitor" name="monitor" class="mt-1 block w-full bg-gray-700 border-gray-600 text-gray-200 rounded-md shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-300 focus:ring-opacity-50 p-2">
+                            <option value="No">Off</option>
+                            <option value="Yes">On</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="resolution" class="block text-sm font-medium text-gray-300">Resolution</label>
+                        <select id="resolution" name="resolution" class="mt-1 block w-full bg-gray-700 border-gray-600 text-gray-200 rounded-md shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-300 focus:ring-opacity-50 p-2">
+                            <option value="640x480">640x480</option>
+                            <option value="1280x960">1280x960</option>
+                            <option value="1920x1440">1920x1440</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="compression" class="block text-sm font-medium text-gray-300">Compression</label>
+                        <select id="compression" name="compression" class="mt-1 block w-full bg-gray-700 border-gray-600 text-gray-200 rounded-md shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-300 focus:ring-opacity-50 p-2">
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="fps" class="block text-sm font-medium text-gray-300">FPS</label>
+                        <select id="fps" name="fps" class="mt-1 block w-full bg-gray-700 border-gray-600 text-gray-200 rounded-md shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-300 focus:ring-opacity-50 p-2">
+                            <option value="Auto">Auto</option>
+                            <option value="30">30</option>
+                            <option value="60">60</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="colorMode" class="block text-sm font-medium text-gray-300">Color Mode</label>
+                        <select id="colorMode" name="colorMode" class="mt-1 block w-full bg-gray-700 border-gray-600 text-gray-200 rounded-md shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-300 focus:ring-opacity-50 p-2">
+                            <option value="Color">Color</option>
+                            <option value="Gray">Grayscale</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="rotation" class="block text-sm font-medium text-gray-300">Rotation</label>
+                        <select id="rotation" name="rotation" class="mt-1 block w-full bg-gray-700 border-gray-600 text-gray-200 rounded-md shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-300 focus:ring-opacity-50 p-2">
+                            <option value="-90">-90°</option>
+                            <option value="0">0°</option>
+                            <option value="90">90°</option>
+                            <option value="180">180°</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="effect" class="block text-sm font-medium text-gray-300">Effect</label>
+                        <select id="effect" name="effect" class="mt-1 block w-full bg-gray-700 border-gray-600 text-gray-200 rounded-md shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-300 focus:ring-opacity-50 p-2">
+                            <option value="Normal">Normal</option>
+                            <option value="Negative">Negative</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="sharpness" class="block text-sm font-medium text-gray-300">Sharpness</label>
+                        <select id="sharpness" name="sharpness" class="mt-1 block w-full bg-gray-700 border-gray-600 text-gray-200 rounded-md shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-300 focus:ring-opacity-50 p-2">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Very High">Very High</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-teal-500 to-purple-500 text-white py-3 px-4 rounded-md hover:from-teal-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition duration-300">
+                        <span class="flex items-center justify-center">
+                            Apply Settings
+                            <span id="settingsLoading" class="loading-spinner ml-2 hidden"></span>
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Video Feed -->
+        <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-xl font-semibold text-gray-100 mb-4">Live Video Feed</h2>
+            <div class="relative">
+                <img src="/video_feed" alt="Live Video Feed" class="video-feed mx-auto">
+                <div id="videoLoading" class="loading-spinner absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden"></div>
+            </div>
+        </div>
+
+        <!-- Capture Image -->
+        <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-xl font-semibold text-gray-100 mb-4">Capture High Resolution Image</h2>
+            <form id="captureForm" method="POST" action="/capture_image" class="text-center">
+                <button type="submit" class="bg-gradient-to-r from-purple-500 to-teal-500 text-white py-3 px-6 rounded-md hover:from-purple-600 hover:to-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-300">
+                    <span class="flex items-center justify-center">
+                        Capture Image
+                        <span id="captureLoading" class="loading-spinner ml-2 hidden"></span>
+                    </span>
+                </button>
+            </form>
+            <img id="capturedImage" src="" alt="Captured Image Preview" class="video-feed mx-auto mt-4 hidden">
+        </div>
+    </div>
+
+    <script>
+        // Settings Form Submission
+        document.getElementById('settingsForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const loading = document.getElementById('settingsLoading');
+            loading.classList.remove('hidden');
+            fetch('/set_settings', {
+                method: 'POST',
+                body: new FormData(this)
+            }).then(response => response.json())
+              .then(data => {
+                  loading.classList.add('hidden');
+                  if (data.status === 'success') {
+                      alert('Settings applied successfully!');
+                  } else {
+                      alert('Error: ' + data.message);
+                  }
+              }).catch(error => {
+                  loading.classList.add('hidden');
+                  console.error('Error:', error);
+                  alert('An error occurred. Check console.');
+              });
+        });
+
+        // Video Feed Loading
+        const videoFeed = document.querySelector('.video-feed');
+        videoFeed.addEventListener('loadstart', () => {
+            document.getElementById('videoLoading').classList.remove('hidden');
+        });
+        videoFeed.addEventListener('canplay', () => {
+            document.getElementById('videoLoading').classList.add('hidden');
+        });
+
+        // Capture Form Submission
+        document.getElementById('captureForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const loading = document.getElementById('captureLoading');
+            loading.classList.remove('hidden');
+            fetch('/capture_image', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    loading.classList.add('hidden');
+                    if (data.status === 'success') {
+                        document.getElementById('capturedImage').src = '/get_image';
+                        document.getElementById('capturedImage').classList.remove('hidden');
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                }).catch(error => {
+                    loading.classList.add('hidden');
+                    console.error('Error:', error);
+                    alert('An error occurred. Check console.');
+                });
+        });
+    </script>
+</body>
+</html>
